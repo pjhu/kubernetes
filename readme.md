@@ -1,0 +1,2 @@
+# single
+setup single kubernetes

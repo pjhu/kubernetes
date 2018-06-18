@@ -36,7 +36,9 @@ https://cloud.centos.org/centos/7/vagrant/x86_64/images/
 
 - download setup files
     ```
-    scp -i .vagrant/machines/single/virtualbox/private_key -r ~/work/pjhu/kubernetes vagrant@192.168.45.53:~/
+    vagrant ssh single
+    sudo su -
+    cd && git clone https://github.com/pjhu/kubernetes.git
     ```
     
 - get client/server, can find in client/server directory
