@@ -5,7 +5,8 @@ setup single kubernetes
 https://github.com/pjhu/kubespray
 
 ### setup vagrant
-
+    https://github.com/pjhu/kubernetes/blob/master/single/readme.md
+    
 ### resolve problem
 
 -  ansible
