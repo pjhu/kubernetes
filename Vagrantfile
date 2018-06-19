@@ -3,6 +3,8 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
+  # always use Vagrants insecure key
+  config.ssh.insert_key = false
   if Vagrant.has_plugin?("vagrant-cachier")
     # Configure cached packages to be shared between instances of the same base box.
     # More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
@@ -10,9 +12,6 @@ Vagrant.configure(2) do |config|
   end
 
   cluster = {
-    "master" => { :ip => "192.168.45.50", :mem => 1024,  :cpu => 1 },
-    "node1" => { :ip => "192.168.45.51", :mem => 1024,  :cpu => 1 },
-    "node2" => { :ip => "192.168.45.52", :mem => 1024,  :cpu => 1 },
     "single" => { :ip => "192.168.45.53", :mem => 1024,  :cpu => 1 },
   }
 
