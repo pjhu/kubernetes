@@ -8,7 +8,7 @@ spec:
     app: frontend
   ports:
   - protocol: TCP
-    port: 4000
+    port: 3001
     targetPort: 80
 
 ---
@@ -32,3 +32,37 @@ spec:
         ports:
         - name: nginx-port
           containerPort: 80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 8081
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: backend:1.0
+        ports:
+        - name: spring-boot-port
+          containerPort: 8080

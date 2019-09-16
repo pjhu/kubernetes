@@ -1,28 +1,94 @@
-# reference
+# app code
+https://github.com/pjhu/react-tutorial
+
+# setup traefik 101
+https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-957eeede2cf8
+
+# setup ingress-nginx
 https://github.com/AliyunContainerService/k8s-for-docker-desktop
 
-# install ingress
+## install ingress
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/mandatory.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/cloud-generic.yaml
 ```
 
-# image build
+## image build
 https://hub.docker.com/_/nginx  
 
-# test ingress
+## test ingress
 ```
 kubectl get pods --all-namespaces -l app.kubernetes.io/name=ingress-nginx
 ```
 
-# Deploy app
+## Deploy app
 ```
 kubectl apply -f ec.yml
 ```
 
-# Ingress
+## Ingress
 ```
 kubectl apply -f ingress.yaml
+```
+
+# Azure
+## install Azure CLI
+```
+brew update && brew install azure-cli
+```
+
+## Login
+```
+az login
+```
+
+## get credential
+```
+az aks get-credentials --resource-group ec --name ec-prod
+```
+
+## get node
+```
+kubectl get nodes
+```
+
+## docker registry
+
+### login
+```
+az acr login --name ecdockerregistry
+```
+
+### tag
+```
+docker tag backend:1.0 ecdockerregistry.azurecr.io/backend:1.0
+```
+
+### push
+```
+docker push ecdockerregistry.azurecr.io/backend:1.0
+```
+
+### list
+```
+az acr repository list --name ecdockerregistry --output table
+```
+
+## Grant AKS access to ACR  
+https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks
+```
+./acr-role.sh
+```
+
+## dashboard
+```
+az aks browse --resource-group ec --name ec-prod
+```
+
+## traefik setup
+```
+k apply -f traefik-accout.yml
+k apply -f traefik-service.yaml
 ```
 
 # log
@@ -40,4 +106,35 @@ https://docs.docker.com/config/containers/logging/splunk/
            --env "TEST=false" \
            --label location=west \
        your/applications
+```
+
+
+# traefik create
+```
+helm install stable/traefik
+```
+
+```
+LAST DEPLOYED: Wed Sep 11 17:03:08 2019
+NAMESPACE: default
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/ConfigMap
+NAME                        DATA  AGE
+alert-catfish-traefik       1     1s
+alert-catfish-traefik-test  1     1s
+
+==> v1/Deployment
+NAME                   READY  UP-TO-DATE  AVAILABLE  AGE
+alert-catfish-traefik  0/1    1           0          1s
+
+==> v1/Pod(related)
+NAME                                    READY  STATUS             RESTARTS  AGE
+alert-catfish-traefik-644db58678-66trg  0/1    ContainerCreating  0         1s
+
+==> v1/Service
+NAME                   TYPE          CLUSTER-IP   EXTERNAL-IP  PORT(S)                     AGE
+alert-catfish-traefik  LoadBalancer  10.0.150.57  <pending>    80:30547/TCP,443:32318/TCP  1s
+
 ```

@@ -1,0 +1,16 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ec-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: ec.localhost
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: backend-service
+          servicePort: 8080
