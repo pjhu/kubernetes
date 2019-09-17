@@ -2,9 +2,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: ec-ingress
-  annotations:
-    kubernetes.io/ingress.class: traefik
+  name: backend-ingress
 spec:
   rules:
   - host: ec.localhost

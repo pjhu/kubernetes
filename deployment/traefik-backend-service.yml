@@ -9,8 +9,6 @@ spec:
   ports:
   - port: 8080
     targetPort: 8080
-    nodePort: 30080
-  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -28,7 +26,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: ecdockerregistry.azurecr.io/backend:1.0
+        image: econtaineregistry.azurecr.io/backend:1.0
         ports:
         - name: business-port
           containerPort: 8080

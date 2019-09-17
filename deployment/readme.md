@@ -31,23 +31,26 @@ kubectl apply -f ec.yml
 kubectl apply -f ingress.yaml
 ```
 
-# Azure
+# Azure AKS
+
 ## install Azure CLI
 ```
 brew update && brew install azure-cli
 ```
 
-## Login
+## Azure Login
+
+### login
 ```
 az login
 ```
 
-## get credential
+### get credential
 ```
-az aks get-credentials --resource-group ec --name ec-prod
+az aks get-credentials --resource-group ec --name ec-aks-prod
 ```
 
-## get node
+### test
 ```
 kubectl get nodes
 ```
@@ -56,39 +59,41 @@ kubectl get nodes
 
 ### login
 ```
-az acr login --name ecdockerregistry
+az acr login --name econtaineregistry
 ```
 
-### tag
-```
-docker tag backend:1.0 ecdockerregistry.azurecr.io/backend:1.0
-```
-
-### push
-```
-docker push ecdockerregistry.azurecr.io/backend:1.0
-```
-
-### list
-```
-az acr repository list --name ecdockerregistry --output table
-```
-
-## Grant AKS access to ACR  
+### Grant AKS access to ACR  
 https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks
 ```
 ./acr-role.sh
 ```
 
-## dashboard
+### tag
 ```
-az aks browse --resource-group ec --name ec-prod
+docker tag backend:1.0 econtaineregistry.azurecr.io/backend:1.0
 ```
 
-## traefik setup
+### push
+```
+docker push econtaineregistry.azurecr.io/backend:1.0
+```
+
+### list
+```
+az acr repository list --name econtaineregistry --output table
+```
+
+## dashboard
+```
+az aks browse --resource-group ec --name ec-aks-prod
+```
+
+## traefik setup for backend service
 ```
 k apply -f traefik-accout.yml
 k apply -f traefik-service.yaml
+k apply -f traefik-backend-service.yml
+k apply -f traefik-backend-ingress.yml
 ```
 
 # log

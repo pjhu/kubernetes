@@ -1,9 +1,9 @@
 #!/bin/bash
 
 AKS_RESOURCE_GROUP=ec
-AKS_CLUSTER_NAME=ec-prod
+AKS_CLUSTER_NAME=ec-aks-prod
 ACR_RESOURCE_GROUP=ec
-ACR_NAME=ecthoughtworks
+ACR_NAME=econtaineregistry
 
 # Get the id of the service principal configured for AKS
 CLIENT_ID=$(az aks show --resource-group $AKS_RESOURCE_GROUP --name $AKS_CLUSTER_NAME --query "servicePrincipalProfile.clientId" --output tsv)
