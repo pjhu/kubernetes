@@ -44,6 +44,10 @@ brew update && brew install azure-cli
 ```
 az login
 ```
+<!--
+在 Azure China 中使用 Azure CLI 2.0 之前，请首先运行 az cloud set -n AzureChinaCloud 更改云环境。
+如果要切换回 Global Azure，请再次运行 az cloud set -n AzureCloud。
+-->
 
 ### get credential
 ```
@@ -89,11 +93,26 @@ az aks browse --resource-group ec --name ec-aks-prod
 ```
 
 ## traefik setup for backend service
+https://docs.traefik.io/user-guide/kubernetes/
+
 ```
 k apply -f traefik-accout.yml
 k apply -f traefik-service.yaml
 k apply -f traefik-backend-service.yml
 k apply -f traefik-backend-ingress.yml
+```
+
+## test
+```
+curl -H Host:ec.localhost localhost:30001/admin/posts
+curl -H Host:ec.localhost localhost:30001/acuator/health
+```
+
+## traefik dashboard
+https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-957eeede2cf8
+```
+k apply -f traefik-web-ui.yml
+http://dashboard.localhost:30002/dashboard/
 ```
 
 # log
