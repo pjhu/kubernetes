@@ -1,9 +1,6 @@
 # app code
 https://github.com/pjhu/react-tutorial
 
-# setup traefik 101
-https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-957eeede2cf8
-
 # setup ingress-nginx
 https://github.com/AliyunContainerService/k8s-for-docker-desktop
 
@@ -90,7 +87,11 @@ az acr repository list --name econtaineregistry --output table
 ## dashboard
 ```
 az aks browse --resource-group ec --name ec-aks-prod
+
 ```
+
+## setup traefik 101
+https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-957eeede2cf8
 
 ## traefik setup for backend service
 https://docs.traefik.io/user-guide/kubernetes/
@@ -114,6 +115,16 @@ https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-9
 k apply -f traefik-web-ui.yml
 http://dashboard.localhost:30002/dashboard/
 ```
+
+# expose service
+use nodePort expose traefik, application gateway in developing
+
+## application gateway for k8s release version: 0.9
+https://github.com/Azure/application-gateway-kubernetes-ingress
+https://azure.github.io/application-gateway-kubernetes-ingress/
+
+## key vault for aks release version: 0.0.13
+https://github.com/Azure/kubernetes-keyvault-flexvol
 
 # health check(livenessProbe & readinessProbe)
 initialDelaySeconds替换开始时间

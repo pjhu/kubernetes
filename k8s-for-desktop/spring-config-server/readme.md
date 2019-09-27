@@ -1,4 +1,4 @@
-# use spring config native
+# use "native" spring config 
 
 ## set up
 ```
