@@ -1,0 +1,14 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: springconfigclient-ingress
+spec:
+  rules:
+  - host: springconfigclient.localhost
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: springconfigclient-service
+          servicePort: 8080

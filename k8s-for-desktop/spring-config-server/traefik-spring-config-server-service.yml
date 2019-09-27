@@ -1,0 +1,43 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: springconfigserver-service
+spec:
+  selector:
+    app: springconfigserver
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30003
+    name: admin
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springconfigserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springconfigserver
+  template:
+    metadata:
+      labels:
+        app: springconfigserver
+    spec:
+      containers:
+      - name: springconfigserver
+        image: springconfigserver:1.0
+        ports:
+        - name: business-port
+          containerPort: 8080
+        volumeMounts:
+        - name: springconfigserver-config-volume
+          mountPath: /app/spring-config
+      volumes:
+      - name: springconfigserver-config-volume
+        configMap:
+          name: gen-springconfigserver-configmap-k62ctmbh55

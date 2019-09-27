@@ -105,7 +105,7 @@ k apply -f traefik-backend-ingress.yml
 ## test
 ```
 curl -H Host:ec.localhost localhost:30001/admin/posts
-curl -H Host:ec.localhost localhost:30001/acuator/health
+curl -H Host:ec.localhost localhost:30001/actuator/health
 ```
 
 ## traefik dashboard
@@ -114,6 +114,9 @@ https://medium.com/@geraldcroes/kubernetes-traefik-101-when-simplicity-matters-9
 k apply -f traefik-web-ui.yml
 http://dashboard.localhost:30002/dashboard/
 ```
+
+# health check(livenessProbe & readinessProbe)
+initialDelaySeconds替换开始时间
 
 # log
 https://medium.com/@nanduni/container-monitoring-using-splunk-3a0971209a16
@@ -133,7 +136,7 @@ https://docs.docker.com/config/containers/logging/splunk/
 ```
 
 
-# traefik create
+# traefik create by helm
 ```
 helm install stable/traefik
 ```

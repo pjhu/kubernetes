@@ -1,0 +1,4 @@
+configMapGenerator:
+- name: gen-springconfigserver-configmap
+  files:
+  - medicine-backend-prod.yml
