@@ -24,53 +24,16 @@ clusterrolebinding.rbac.authorization.k8s.io/traefik-ingress-controller created
 
 ##### run
 ```
-kubectl apply -f traefik-Services.yml
-```
-
-##### output
-```
-service/traefik created
-service/whoami created
-```
-
-## Deployment
-
-##### run
-```
-kubectl apply -f traefik-Deployment.yml
-```
-
-##### output
-```
-serviceaccount/traefik-ingress-controller created
-deployment.apps/traefik created
-deployment.apps/whoami created
-```
-
-## routes
-
-##### run
-```
-kubectl apply -f traefik-Routers.yml
-```
-
-##### output
-```
-ingressroute.traefik.containo.us/simpleingressroute created
-```
-
-## get all services
-
-##### run
-```
- k get svc -A
-```
-
-##### output
-```
+cd ..
+kubectl apply -f traefik/
 ```
 
 ## traefik UI
 ```
-http://localhost:30808
+http://localhost:8080/dashboard
+```
+
+## test server
+```
+http://localhost:8000
 ```

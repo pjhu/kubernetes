@@ -1,8 +1,29 @@
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   namespace: default
   name: traefik-ingress-controller
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+
+spec:
+  ports:
+    - protocol: TCP
+      name: web
+      port: 8000
+    - protocol: TCP
+      name: admin
+      port: 8080
+  selector:
+    app: traefik
+  type: LoadBalancer
+status:
+  loadBalancer: {}
 
 ---
 kind: Deployment
@@ -38,28 +59,3 @@ spec:
             - name: admin
               containerPort: 8080
 
----
-kind: Deployment
-apiVersion: apps/v1
-metadata:
-  namespace: default
-  name: whoami
-  labels:
-    app: whoami
-
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: whoami
-  template:
-    metadata:
-      labels:
-        app: whoami
-    spec:
-      containers:
-        - name: whoami
-          image: containous/whoami
-          ports:
-            - name: web
-              containerPort: 80
