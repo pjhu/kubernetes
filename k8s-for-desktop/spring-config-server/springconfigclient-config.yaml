@@ -1,8 +1,0 @@
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: springconfigclient-configmap
-data:
-  SPRING_PROFILES_ACTIVE: prod
-  CONFIG_SERVER_URL: http://springconfigserver-service:8080

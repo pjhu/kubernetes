@@ -1,5 +1,0 @@
-server:
-    port: 8080
-
-payment:
-    method: prod-alipay
