@@ -51,3 +51,4 @@ spec:
       port: 8088
       targetPort: 8080
       name: admin
+  type: LoadBalancer
