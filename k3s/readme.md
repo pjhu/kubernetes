@@ -176,7 +176,7 @@ ETCD_NAME="etcd2"
 
 #[Clustering]
 ETCD_INITIAL_ADVERTISE_PEER_URLS="https://192.168.56.2:2380"
-ETCD_ADVERTISE_CLIENT_URLS="https://192.168.56.2:2379"
+ETCD_ADVERTISE_CLIENT_URLS="https://192.168.56.2:2379,https://127.0.0.1:2379"
 ETCD_INITIAL_CLUSTER="etcd1=https://192.168.56.1:2380,etcd2=https://192.168.56.2:2380,etcd3=https://192.168.56.3:2380"
 ETCD_INITIAL_CLUSTER_TOKEN="etcd-cluster"
 ETCD_INITIAL_CLUSTER_STATE="new"
@@ -226,8 +226,9 @@ ETCD_LOG_PACKAGE_LEVELS="etcdserver=WARNING,security=DEBUG"
 
 #### 配置启动服务文件
 ```
+sudo chown -R etcd:etcd /mnt/lib/etcd
 sudo systemctl stop etcd.service
-sudo rm -rf /var/lib/etcd/default.etcd/member
+sudo rm -rf /mnt/lib/etcd/default.etcd/member
 sudo systemctl status etcd.service
 sudo systemctl daemon-reload
 sudo systemctl start etcd.service
@@ -290,12 +291,115 @@ kubectl get nodes
 
 #### 测试etcd keys
 ```
-ETCDCTL_API=3 etcdctl --endpoints=<etcd_ip>:2379 get / --prefix --keys-only
-ETCDCTL_API=3 etcdctl --endpoints <etcd_ip>:2379 --cacert <ca_cert_path> --cert <cert_path> --key <cert_key_path> get / --prefix --keys-only
+ETCDCTL_API=3 etcdctl --endpoints https://192.168.1:2379,https://192.168.2:2379,https://192.168.3:2379 --cacert /etc/ssl/etcd/ca.pem --cert /etc/ssl/etcd/client.pem --key /etc/ssl/etcd/client-key.pem get / --prefix --keys-only
 ```
 
 #### 卸载k3s
 ```
 sudo systemctl stop k3s.service
 /usr/local/bin/k3s-uninstall.sh
+```
+
+# 配置containerd
+```
+https://stackoverflow.com/questions/59211424/where-is-k3s-storing-pods
+https://github.com/containerd/containerd/blob/main/docs/ops.md
+```
+
+# delete traefik
+```
+ --disable traefik
+
+并执行：https://github.com/k3s-io/k3s/issues/1160
+kubectl -n kube-system delete helmcharts.helm.cattle.io traefik
+```
+
+# 更改k3s存储目录
+#### 参考文件
+```
+https://aq2.cn/323.html
+https://blog.csdn.net/catoop/article/details/121240958
+```
+#### 配置
+```
+sudo chmod +x /usr/local/bin/k3s
+mkdir -p /mnt/lib/rancher/k3s/default-local-storage
+mkdir -p /mnt/lib/rancher/k3s/agent/etc/containerd
+```
+
+#### 配置containerd
+/etc/containerd/config.toml
+```
+root = "/mnt/lib/containerd"
+state = "/mnt/containerd"
+
+[grpc]
+  address = "/mnt/containerd/containerd.sock"
+  uid = 0
+  gid = 0
+
+[debug]
+  address = "/mnt/containerd/debug.sock"
+  uid = 0
+  gid = 0
+  level = "info"
+```
+
+#### 配置containerd plugin，并添加镜像源
+/mnt/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
+```
+[plugins.opt]
+  path = "/mnt/lib/rancher/k3s/agent/containerd"
+
+[plugins.cri]
+  stream_server_address = "127.0.0.1"
+  stream_server_port = "10010"
+  enable_selinux = false
+  sandbox_image = "rancher/mirrored-pause:3.6"
+
+[plugins.cri.containerd]
+  snapshotter = "overlayfs"
+  disable_snapshot_annotations = true
+
+
+[plugins.cri.cni]
+  bin_dir = "/mnt/lib/rancher/k3s/data/31ff0fd447a47323a7c863dbb0a3cd452e12b45f1ec67dc55efa575503c2c3ac/bin"
+  conf_dir = "/mnt/lib/rancher/k3s/agent/etc/cni/net.d"
+
+
+[plugins.cri.containerd.runtimes.runc]
+  runtime_type = "io.containerd.runc.v2"
+
+[plugins.cri.registry.mirrors]
+  [plugins.cri.registry.mirrors."docker.io"]
+    endpoint = ["https://registry.cn-hangzhou.aliyuncs.com"]
+```
+
+#### 配置私有仓库
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://dataplatform-registry-vpc.cn-shanghai.cr.aliyuncs.com"
+configs:
+  "dataplatform-registry-vpc.cn-shanghai.cr.aliyuncs.com":
+    tls:
+      cert_file:
+      key_file:
+      ca_file:
+
+#### 在三台机器上安装k3s
+4fe6f3ff56844db6b02ef0dcc2e17401
+```
+curl -sfL https://rancher-mirror.rancher.cn/k3s/k3s-install.sh | INSTALL_K3S_MIRROR=cn INSTALL_K3S_SKIP_DOWNLOAD=true K3S_DATASTORE_CAFILE=/etc/ssl/etcd/ca.pem K3S_DATASTORE_CERTFILE=/etc/ssl/etcd/client.pem K3S_DATASTORE_KEYFILE=/etc/ssl/etcd/client-key.pem sh -s - server --token 4fe6f3ff56844db6b02ef0dcc2e17401 --data-dir /mnt/lib/rancher/k3s --default-local-storage-path /mnt/lib/rancher/k3s/default-local-storage --datastore-endpoint "https://192.168.56.1:2379,https://192.168.56.2:2379,https://192.168.56.3:2379" --disable traefik
+```
+
+#### 卸载
+```
+rm -rf /mnt/lib/rancher/k3s
+rm -rf /var/lib/rancher/k3s //此目录在启动kubectl时，从/mnt目录下复制过来的
+```
+
+#### kubectl,crictl命令
+```
+cp /nvme/lib/rancher/k3s/agent/etc/crictl.yaml /var/lib/rancher/k3s/data/31ff0fd447a47323a7c863dbb0a3cd452e12b45f1ec67dc55efa575503c2c3ac/bin/
 ```
