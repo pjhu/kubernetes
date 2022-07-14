@@ -277,6 +277,10 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_DOWNLOAD=true sh -s - server --t
 curl -sfL https://get.k3s.io | INSTALL_K3S_SKIP_DOWNLOAD=true K3S_DATASTORE_CAFILE=/etc/ssl/etcd/ca.pem K3S_DATASTORE_CERTFILE=/etc/ssl/etcd/client.pem K3S_DATASTORE_KEYFILE=/etc/ssl/etcd/client-key.pem sh -s - server --token=SECRET --datastore-endpoint="https://192.168.56.1:2379,https://192.168.56.2:2379,https://192.168.56.3:2379"
 ```
 
+#### 别名
+alias k=kubectl
+alias docker=crictl
+
 #### 测试
 >当执行kubectl get nodes是报如下错误可参考
 >https://github.com/k3s-io/k3s/issues/389
