@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: yiban.pcqmm.com
+  namespace: kong
+spec:
+  dnsNames:
+  - yiban.pcqmm.com # 要签发证书的域名
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-kong-issuer # 引用 Issuer，指示采用 http01 方式进行校验
+  secretName: kong-proxy-tls # 最终签发出来的证书会保存在这个 Secret 里面

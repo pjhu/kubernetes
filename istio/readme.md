@@ -100,7 +100,7 @@ istioctl install --set profile=minimal -y
 kubectl create namespace kong
 kubectl label namespace kong istio-injection=enabled
 helm repo add kong https://charts.konghq.com && helm repo update
-helm install -n kong kong-istio kong/kong
+helm install -n kong kong-istio kong/kong -f kong.yaml
 ```
 
 #### 部署bookinfo
@@ -121,25 +121,9 @@ https://xxx.xx.xx.xxx/productpage
 # 配置自签名证书
 
 ```
-https://diamondfsd.com/lets-encrytp-hand-https/
+https://cert-manager.io/docs/installation/helm/#option-2-install-crds-as-part-of-the-helm-release
 
-certbot certonly --standalone -w /var/www/pcqmm -d yiban.pcqmm.com [端口已经已经占用，可以访问到目录]
-certbot certonly --standalone -d yiban.pcqmm.com [端口没有使用]
-
- - Congratulations! Your certificate and chain have been saved at:
-   /etc/letsencrypt/live/yiban.pcqmm.com/fullchain.pem
-   Your key file has been saved at:
-   /etc/letsencrypt/live/yiban.pcqmm.com/privkey.pem
-   Your certificate will expire on 2022-10-08. To obtain a new or
-   tweaked version of this certificate in the future, simply run
-   certbot again. To non-interactively renew *all* of your
-   certificates, run "certbot renew"
- - If you like Certbot, please consider supporting our work by:
-
-   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
-   Donating to EFF:                    https://eff.org/donate-le
-
-kubectl create secret tls kong-proxy-tls --cert=/etc/letsencrypt/live/yiban.pcqmm.com/cert.pem --key=/etc/letsencrypt/live/yiban.pcqmm.com/privkey.pem -n kong
+k create secret tls kong-proxy-ali-tls --cert=/root/cert/aliyun_ssl/8124086_yiban.pcqmm.com.pem --key=/root/cert/aliyun_ssl/8124086_yiban.pcqmm.com.key -n kong
 
 helm upgrade -n kong kong-istio kong/kong -f kong.yaml
 ```

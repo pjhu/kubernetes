@@ -91,8 +91,8 @@ env:
   admin_gui_error_log: /dev/stderr
   portal_api_error_log: /dev/stderr
   prefix: /kong_prefix/
-  ssl_cert: /etc/secrets/kong-proxy-tls/tls.crt
-  ssl_cert_key: /etc/secrets/kong-proxy-tls/tls.key
+  ssl_cert: /etc/secrets/kong-proxy-ali-tls/tls.crt
+  ssl_cert_key: /etc/secrets/kong-proxy-ali-tls/tls.key
   # nginx_proxy_ssl_certificate: /etc/secrets/kong-proxy-tls/tls.crt
   # nginx_proxy_ssl_certificate_key: /etc/secrets/kong-proxy-tls/tls.key
 
@@ -391,7 +391,7 @@ plugins: {}
 # - kong-proxy-tls
 # - kong-admin-tls
 secretVolumes:
-  - kong-proxy-tls
+  - kong-proxy-ali-tls
 
 # Enable/disable migration jobs, and set annotations for them
 migrations:
